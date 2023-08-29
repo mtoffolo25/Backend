@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Teclado Mecánico",
+    "description": "Redragon Fizz Pro K616-RGB QWERTY Red inglés US color blanco y gris con luz RGB",
+    "code": "Código del Producto",
+    "price": 25000,
+    "status": true,
+    "stock": 50,
+    "category": "Perisferícos",
+    "thumbnails": [
+      "https://http2.mlstatic.com/D_NQ_NP_944516-MLA50059145076_052022-O.webp"
+    ],
+    "id": 92
+  },
+  {
+    "title": "Micrófono",
+    "description": "HyperX SoloCast condensador cardioide negro",
+    "code": "Código del Producto",
+    "price": 42000,
+    "status": true,
+    "stock": 50,
+    "category": "Perisferícos",
+    "thumbnails": [
+      "https://http2.mlstatic.com/D_NQ_NP_964872-MLA51046034408_082022-O.webp"
+    ],
+    "id": 64
+  }
+]
