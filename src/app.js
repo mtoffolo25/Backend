@@ -40,7 +40,7 @@ export function getIO() {
 
 const connectMongoDB = async () => {
     try {
-        await mongoose.connect('mongodb+srv://cuede:timecrisis@ecommerce.xsh8fec.mongodb.net/ecommerce');
+        await mongoose.connect('mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority');
         console.log("Conectado con exito a MongoDB usando Moongose.");
     } catch (error) {
         console.error("No se pudo conectar a la BD usando Moongose: " + error);

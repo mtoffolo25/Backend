@@ -1,4 +1,4 @@
-import { MODEL_CARTS } from "./models/cart.js";
+import { cartModel } from "./models/cart.js";
 
 export default class CartManager {
 
@@ -7,7 +7,7 @@ export default class CartManager {
             const newCart = {
                 products: []
             };
-            const result = await MODEL_CARTS.create(newCart);
+            const result = await cartModel.create(newCart);
             return { code: 200, status: `Carrito agregado con id: ${result.id}` };
         } catch (error) {
             console.log(error);
@@ -16,7 +16,7 @@ export default class CartManager {
 
     async getCarts() {
         try {
-            const carts = await MODEL_CARTS.find();
+            const carts = await cartModel.find();
             return carts.map(cart => cart.toObject());
         } catch (error) {
             console.log(error);
@@ -25,7 +25,7 @@ export default class CartManager {
 
     async getProductsOfCartById(id) {
         try {
-            const cart = await MODEL_CARTS.findById(id);
+            const cart = await cartModel.findById(id);
             return cart ? cart.products : false;
         } catch (error) {
             console.log(error);
@@ -34,7 +34,7 @@ export default class CartManager {
 
     async addProductToCart(cid, pid) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await cartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'carrito no encontrado' };
             }

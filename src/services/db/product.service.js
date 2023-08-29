@@ -1,4 +1,4 @@
-import { MODEL_PRODUCTS } from "./models/product.js";
+import { productModel } from "./models/product.js";
 
 export default class ProductManager {
 
@@ -35,7 +35,7 @@ export default class ProductManager {
             if(!this.validateFields(product)) {
                 return { code: 400, status: 'Todos los campos del producto deben ser ingresados' };
             }
-            let result = await MODEL_PRODUCTS.create(product);
+            let result = await productModel.create(product);
             return { code: 200, status: 'Producto agregado', product: result };
         } catch (error) {
             console.log(error);
@@ -44,7 +44,7 @@ export default class ProductManager {
 
     async getProducts(optionsQuery, options) {
         try {
-            const products = await MODEL_PRODUCTS.paginate(optionsQuery, options);
+            const products = await productModel.paginate(optionsQuery, options);
             return products;
         } catch (error) {
             console.log(error);
@@ -53,7 +53,7 @@ export default class ProductManager {
 
     async getProductById(id) {
         try {
-            const product = await MODEL_PRODUCTS.findById(id);
+            const product = await productModel.findById(id);
             return product ? product : false;
         } catch (error) {
             console.log(error);
@@ -64,7 +64,7 @@ export default class ProductManager {
         try {
             const product = await this.getProductById(id);
             if(product) {
-                await MODEL_PRODUCTS.deleteOne({ _id: id });
+                await productModel.deleteOne({ _id: id });
                 return { code: 200, status: 'Producto eliminado' };
             } else {
                 return { code: 404, status: 'Producto no existe' };
@@ -76,7 +76,7 @@ export default class ProductManager {
 
     async updateProduct(id, updatedFields) {
         try {
-            const product = await MODEL_PRODUCTS.findByIdAndUpdate(id, updatedFields, { new: true });
+            const product = await productModel.findByIdAndUpdate(id, updatedFields, { new: true });
             if(product) {
                 return { code: 200, status: 'Producto actualizado' };
             } else {
