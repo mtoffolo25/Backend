@@ -1,9 +1,10 @@
 import { Router } from "express";
+import CartManager from "../services/db/cart.service.js";
 
-const cartsRouter = Router();
+const router = Router();
+const manager = new CartManager();
 
-
-cartsRouter.post('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         let status = await manager.addCart();
         res.status(status.code).json({status: status.status});
@@ -12,9 +13,9 @@ cartsRouter.post('/', async (req, res) => {
     }
 })
 
-cartsRouter.get('/:cid', async (req, res) => {
+router.get('/:cid', async (req, res) => {
     const { cid } = req.params;
-    const cartProducts = await manager.getProductsOfCartById(parseInt(cid));
+    const cartProducts = await manager.getProductsOfCartById(cid);
     if(cartProducts) {
       res.send({status: "success", payload: cartProducts });
     }else {
@@ -22,14 +23,14 @@ cartsRouter.get('/:cid', async (req, res) => {
     }
 });
 
-cartsRouter.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
-        let status = await manager.addProductToCart(parseInt(cid), parseInt(pid));
+        let status = await manager.addProductToCart((cid), (pid));
         res.status(status.code).json({status: status.status});
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
 })
 
-export default cartsRouter;
+export default router;

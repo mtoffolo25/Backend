@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-class ProductManager {
+export default class ProductManager {
     constructor(path) {
         this.path = path;
     }
@@ -56,7 +56,7 @@ class ProductManager {
             }
             products.push(newProduct);
             await this.writeFile(products);
-            return {code: 200, status: 'Producto agregado'};
+            return {code: 200, status: 'Producto agregado', product: newProduct};
         } catch (error) {
             console.log(error);
         }
@@ -118,5 +118,3 @@ class ProductManager {
         }
     }
 }
-
-export default ProductManager;
