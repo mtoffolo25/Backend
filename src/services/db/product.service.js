@@ -17,19 +17,17 @@ export default class ProductManager {
             product.description &&
             typeof product.price === 'number' &&
             typeof product.status === 'boolean' &&
-            product.code &&
             typeof product.stock === 'number' &&
             product.category &&
             typeof product.title === 'string' &&
             typeof product.description === 'string' &&
-            typeof product.code === 'string' &&
             typeof product.category === 'string'
         );
     }
 
     async addProduct(product) {
         try {
-            if(await this.isCodeUnique(product.code)) {
+            if(await this.isCodeUnique(product)) {
                 return { code: 409, status: 'Este producto ya existe' };
             }
             if(!this.validateFields(product)) {

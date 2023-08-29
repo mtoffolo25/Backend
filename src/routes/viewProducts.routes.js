@@ -1,12 +1,11 @@
 import { Router } from "express";
-import ProductManager from "../services/db/product.service.js";
+import { productModel } from "../services/db/models/product.js";
 
-const router = Router();
-const manager = new ProductManager();
+const viewProducts = Router();
 
-router.get('/', async (req, res) => {
-    const products = await manager.getProducts();
+viewProducts.get('/', async (req, res) => {
+    const products = await productModel.find().lean();
     res.render('home', {products});
 })
 
-export default router;
+export default viewProducts;

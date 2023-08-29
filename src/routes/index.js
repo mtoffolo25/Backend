@@ -8,7 +8,7 @@ const router = Router();
 
 router.use('/api/products', products);
 router.use('/api/carts', cart);
-router.use('/noRealTimeProducts', viewProducts);
+router.use('/viewProducts', viewProducts);
 router.use('/realTimeProducts', realTimeProducts);
 
 export default router;
