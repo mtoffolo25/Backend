@@ -5,6 +5,7 @@ import handlebars from 'express-handlebars';
 import __dirname from './utils.js';
 import viewProducts from './router/viewProducts.router.js'
 import { Server} from 'socket.io';
+import mongoose from 'mongoose';
 
 const app = express();
 const PORT = 8080;
@@ -44,3 +45,15 @@ socketServer.on('connection', socket => {
     socketServer.emit("evento_para_todos", "Evento para todos los Sockets!");
 
 })
+
+const DB = 'mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority'
+const connectMongoDB = async () => {
+    try {
+        await mongoose.connect(DB);
+        console.log("Conectado con exito a MongoDB usando Mongoose");
+    } catch (error) {
+        console.error("No se pudo conectar a la BD usando Moongose: " + error);
+        process.exit();
+    }
+}
+connectMongoDB();

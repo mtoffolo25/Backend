@@ -1,40 +1,33 @@
 import { Router } from "express";
-import ProductManager from "../controllers/productManager.js";
+import { productModel } from "../models/products.model.js";
 
 const productsRouter = Router();
-const manager = new ProductManager('./src/data/products.json');
 
 productsRouter.get('/', async (req, res) => {
-    try {
-      const { limit } = req.query;
-      let products = await manager.getProducts();
-      if (limit) {
-        let newProducts = products.slice(0, limit);
-        products = newProducts;
-      }
-  
-      res.send({status: "success", payload: products });
-    } catch (error) {
-      res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-    }
+  try {
+    let users = await productModel.find();
+    console.log(users);
+    res.send({ result: 'success', payload: users })
+} catch (error) {
+    console.error("No se pudo obtener usuarios con moongose: " + error);
+    res.status(500).send({ error: "No se pudo obtener usuarios con moongose", message: error });
+}
 });
 
 productsRouter.post('/', async (req, res) => {
   try {
-    let productToAdd = req.body;
-    if (!('status' in productToAdd)) {
-      productToAdd.status = true;
-    }
-    let status = await manager.addProduct(productToAdd);
-    res.status(status.code).json({status: status.status})
-  } catch (error) {
-    res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-  }
+    let { title, description, price, status, stock, category, thumbnails } = req.body
+    let user = await productModel.create({ title, description, price, status, stock, category, thumbnails });
+    res.status(201).send({ result: 'success', payload: user })
+} catch (error) {
+    console.error("No se pudo crear usuarios con moongose: " + error);
+    res.status(500).send({ error: "No se pudo crear usuarios con moongose", message: error });
+}
 });
 
 productsRouter.get('/:pid', async (req, res) => {
     const { pid } = req.params;
-    const product = await manager.getProductById(parseInt(pid));
+    const product = await productModel.findById(pid);
     if(product) {
       res.send({status: "success", payload: product });
     }else {
@@ -43,16 +36,25 @@ productsRouter.get('/:pid', async (req, res) => {
 });
 
 productsRouter.put('/:pid', async (req, res) => {
-    const {pid} = req.params;
-    let productToUpdate = req.body;
-    let status = await manager.updateProduct(parseInt(pid), productToUpdate);
-    res.status(status.code).json({status: status.status});
+  try {
+    let userUpdated = req.body;
+    let user = await productModel.updateOne({ _id: req.params.id }, userUpdated);
+    res.status(202).send(user);
+} catch (error) {
+    console.error("No se pudo obtener usuarios con moongose: " + error);
+    res.status(500).send({ error: "No se pudo obtener usuarios con moongose", message: error });
+}
 })
 
 productsRouter.delete('/:pid', async (req, res) => {
-  const {pid} = req.params;
-  let status = await manager.deleteProductById(parseInt(pid));
-  res.status(status.code).json({status: status.status});
+  try {
+    let { id } = req.params;
+    let result = await productModel.deleteOne({ _id: id })
+    res.status(202).send({ status: "success", payload: result });
+} catch (error) {
+    console.error("No se pudo obtener usuarios con moongose: " + error);
+    res.status(500).send({ error: "No se pudo obtener usuarios con moongose", message: error });
+}
 })
 
 export default productsRouter;
