@@ -5,6 +5,7 @@ import handlebars from "express-handlebars";
 import __dirname from './utils.js';
 import http from 'http';
 import { Server } from "socket.io";
+import { productModel } from "./services/db/models/product.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -42,6 +43,8 @@ const connectMongoDB = async () => {
     try {
         await mongoose.connect('mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority');
         console.log("Conectado con exito a MongoDB usando Moongose.");
+        let productPag = await productModel.paginate({}, { limit: 10, page: 1 });
+        console.log(productPag);
     } catch (error) {
         console.error("No se pudo conectar a la BD usando Moongose: " + error);
         process.exit();

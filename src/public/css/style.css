@@ -1,0 +1,11 @@
+.allProducts {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 15px;
+}
+
+.card {
+    margin: 10px;
+}
