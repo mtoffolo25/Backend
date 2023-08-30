@@ -1,6 +1,6 @@
 {{#if isValid}}
 <div class="allProducts">
-  {{#each products}}
+  {{#each docs}}
     <div class="card" style="width: 18rem">
       <img src={{this.thumbnail}} class="card-img-top" alt="..." />
       <div class="card-body">
@@ -11,8 +11,8 @@
     </div>
   {{/each}}
 </div>
-
-<div>
+<br>
+<div class="pagination">
   {{#if hasPrevPage}}
     <a href={{this.prevLink}}>
       Anterior
