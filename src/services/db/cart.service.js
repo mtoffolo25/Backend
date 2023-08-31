@@ -25,7 +25,7 @@ export default class CartManager {
 
     async getProductsOfCartById(id) {
         try {
-            const cart = await cartModel.findById(id);
+            const cart = await cartModel.findById(id).populate('products.product');
             return cart ? cart.products : false;
         } catch (error) {
             console.log(error);
@@ -46,6 +46,67 @@ export default class CartManager {
             }
             await cart.save();
             return { code: 200, status: 'producto agregado al carrito' };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async removeProductFromCart(cid, pid) {
+        try {
+            const result = await cartModel.updateOne(
+                { _id: cid },
+                { $pull: { products: { product: pid } } }
+            );
+            if (result.acknowledged === true) {
+                return { code: 200, status: 'Producto eliminado del carrito' };
+            }
+            return { code: 404, status: 'Producto no encontrado en el carrito' };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async updateCart(cid, products) {
+        try {
+            const result = await cartModel.updateOne(
+                { _id: cid },
+                { products: products }
+            );
+            if (result.acknowledged === true) {
+                return { code: 200, status: 'Carrito actualizado exitosamente' };
+            }
+            return { code: 404, status: 'Carrito no encontrado' };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async updateProductQuantity(cid, pid, quantity) {
+        try {
+            console.log(`cid: ${cid}, pid: ${pid}, quantity: ${quantity}`);
+            const result = await cartModel.updateOne(
+                { _id: cid, 'products.product': pid },
+                { $set: { 'products.$.quantity': quantity } }
+            );
+            if (result.acknowledged === true) {
+                return { code: 200, status: 'Cantidad de producto actualizada' };
+            }
+            return { code: 404, status: 'Producto no encontrado en el carrito' };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async removeAllProductsFromCart(cid) {
+        try {
+            const result = await cartModel.updateOne(
+                { _id: cid },
+                { products: [] }
+            );
+            if (result.acknowledged === true) {
+                return { code: 200, status: 'Todos los productos han sido eliminados del carrito' };
+            }
+            return { code: 404, status: 'Carrito no encontrado' };
         } catch (error) {
             console.log(error);
         }
