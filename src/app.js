@@ -5,7 +5,6 @@ import handlebars from "express-handlebars";
 import __dirname from './utils.js';
 import http from 'http';
 import { Server } from "socket.io";
-import { productModel } from "./services/db/models/product.js";
 
 const app = express();
 const server = http.createServer(app);
