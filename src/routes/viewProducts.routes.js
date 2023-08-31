@@ -10,7 +10,7 @@ viewProducts.get('/', async (req, res) => {
     result.prevLink = result.hasPrevPage ? `http://localhost:8080/viewProducts?page=${result.prevPage}` : '';
     result.nextLink = result.hasNextPage ? `http://localhost:8080/viewProducts?page=${result.nextPage}` : '';
     result.isValid = !(page <= 0 || page > result.totalPages)
-    res.render('home', result);
+    res.render('products', result);
 })
 
 export default viewProducts;

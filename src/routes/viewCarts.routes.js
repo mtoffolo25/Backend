@@ -6,7 +6,6 @@ const viewCart = Router();
 viewCart.get('/', async (req, res) => {
     let cartRender = cartModel.find()
     res.render('cart', cartRender)
-    console.log(cartRender);
 })
 
 export default viewCart;
