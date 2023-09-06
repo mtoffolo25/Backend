@@ -1,11 +1,12 @@
 const form = document.getElementById('formLogin');
 
-form.addEventListener('submit', e => {
+form.addEventListener("submit", e => {
+    console.log("Boton funciona");
     e.preventDefault();
     const data = new FormData(form);
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
-    fetch('/api/sessions/login', {
+    fetch('/login', {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
@@ -13,7 +14,7 @@ form.addEventListener('submit', e => {
         }
     }).then(result => {
         if (result.status === 200) {
-            window.location.replace('/users');
+            window.location.replace('/api/products');
         }
     })
 })

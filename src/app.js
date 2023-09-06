@@ -14,6 +14,7 @@ const io = new Server(server);
 const PORT = process.env.PORT || 8080;
 const MONGO_URL = "mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority"; 
 
+
 app.use(express.json());
 app.use(urlencoded({extended: true}));
 
@@ -47,8 +48,6 @@ app.use(session({
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         ttl: 10
     }),
-
-
     secret: "coderS3cr3t",
     resave: false,
     saveUninitialized: true
