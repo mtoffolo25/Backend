@@ -28,6 +28,7 @@ sessionRouter.post('/login', async (req, res) => {
     const user = await userModel.findOne({email, password});
 
     if(!user) return res.status(401).send({ status: "error", error: "Incorrect credentials" });
+
     res.send({ status: "success", payload: user, message: "¡Primer logueo realizado! :)" });
 
 })
