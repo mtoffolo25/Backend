@@ -54,3 +54,7 @@
 #registerForm h6 {
     color: white;
 }
+
+h6 a i {
+    margin: 15px;
+}

@@ -1,36 +1,52 @@
 import { Router } from "express";
-import userModel from "../services/db/models/user.js";
+import passport from "passport";
 
 const sessionRouter = Router();
 
-sessionRouter.post('/register', async (req, res) => {
-    const { firt_name, last_name, email, age, password } = req.body;
-    const exist = await userModel.findOne({ email });
+sessionRouter.get("/github", passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { });
 
-    if (exist) {
-        return res.status(400).send({ status: 'error', message: 'usuario ya existe' })
-    }
 
-    const user = {
-        firt_name,
-        last_name,
-        email,
-        age,
-        password
-    }
+sessionRouter.get("/githubcallback", passport.authenticate('github', { failureRedirect: '/github/error' }), async (req, res) => {
+    const user = req.user;
+    req.session.user = {
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        age: user.age
+    };
+    req.session.admin = true;
+    res.redirect("/users");
+});
 
-    const result = await userModel.create(user);
-    res.send({ status: "success", message: "Usuario creado con exito con ID: " + result.id })
-})
 
-sessionRouter.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    const user = await userModel.findOne({email, password});
+sessionRouter.post("/register", passport.authenticate(
+    'register', { failureRedirect: '/fail-register' })
+    , async (req, res) => {
+        console.log("Registrando nuevo usuario.");
+        res.status(201).send({ status: "success", message: "Usuario creado con extito." });
+    });
 
-    if(!user) return res.status(401).send({ status: "error", error: "Incorrect credentials" });
+sessionRouter.post("/login", passport.authenticate(
+    'login', { failureRedirect: '/fail-login' })
+    , async (req, res) => {
+        console.log("User found to login:");
+        const user = req.user;
+        console.log(user);
+        if (!user) return res.status(401).send({ status: "error", error: "El usuario y la contraseña no coinciden!" });
+        req.session.user = {
+            name: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            age: user.age
+        };
+        req.session.admin = true;
+        res.send({ status: "success", payload: req.session.user, message: "Primer logueo realizado!! :)" })
+    });
 
-    res.send({ status: "success", payload: user, message: "¡Primer logueo realizado! :)" });
+sessionRouter.get("/fail-register", (req, res) => {
+    res.status(401).send({ error: "Failed to process register!" });
+});
 
-})
+sessionRouter.get("/fail-login", (req, res) => {
+    res.status(401).send({ error: "Failed to process login!" });
+});
 
 export default sessionRouter;

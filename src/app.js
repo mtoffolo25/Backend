@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import router from "./routes/index.js";
 import mongoose from "mongoose";
 import handlebars from "express-handlebars";
@@ -7,25 +7,24 @@ import http from 'http';
 import { Server } from "socket.io";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 8080;
-const MONGO_URL = "mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority"; 
+const MONGO_URL = "mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority";
 
 
 app.use(express.json());
-app.use(urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + '/public'));
-
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-
-app.use('/', router);
 
 io.on('connection', socket => {
     console.log('Nuevo cliente conectado');
@@ -46,12 +45,18 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: MONGO_URL,
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-        ttl: 10
+        ttl: 60
     }),
     secret: "coderS3cr3t",
     resave: false,
     saveUninitialized: true
 }));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', router);
 
 const connectMongoDB = async () => {
     try {
