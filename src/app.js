@@ -29,7 +29,7 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-
+// Socket
 io.on('connection', socket => {
     console.log('Nuevo cliente conectado');
     socket.on('disconnect', () => {
