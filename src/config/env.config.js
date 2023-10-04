@@ -5,7 +5,7 @@ const enviroment = program.opts().mode
 console.log("Modo Opt: ", program.opts().mode);
 
 dotenv.config({
-    path: enviroment === "dev" ? "./src/config/.env.development" : "./src/config/.env.production"
+    path: enviroment === "dev" ? "./src/config/.env.production" : "./src/config/.env.production"
 });
 
 export default {
