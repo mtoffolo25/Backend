@@ -1,9 +1,9 @@
 import { Router } from "express";
-import viewProducts from "./viewProducts.routes.js";
-import viewCart from "./viewCarts.routes.js";
-import sessionRouter from "./session.routes.js";
-import userViewRouter from "./user.views.routes.js";
-import cookiesRouter from "./session.routes.js";
+import viewProducts from "./Views/viewProducts.routes.js";
+import viewCart from "./Views/viewCarts.routes.js";
+import sessionRouter from "./Session/session.routes.js";
+import userViewRouter from "./Users/user.views.routes.js";
+import cookiesRouter from "./Session/session.routes.js";
 
 const router = Router();
 

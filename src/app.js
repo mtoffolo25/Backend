@@ -1,6 +1,5 @@
 import express from "express";
 import router from "./routes/index.js";
-import mongoose from "mongoose";
 import handlebars from "express-handlebars";
 import __dirname from './utils.js';
 import http from 'http';
@@ -9,18 +8,23 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import MongoSingleton from './config/db.js';
+import configEnv from './config/env.config.js';
+import './config/db.js'
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const PORT = process.env.PORT || 8080;
-const MONGO_URL = "mongodb+srv://maxitoffolo:Mt40685691@allcomputers.21ghxhd.mongodb.net/?retryWrites=true&w=majority";
+const PORT = configEnv.port;
 
-
+//Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Middleware para archivos estaticos
 app.use(express.static(__dirname + '/public'));
+
+//Config Handlebars
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
@@ -41,9 +45,10 @@ export function getIO() {
     return io;
 }
 
+//SESSION
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: MONGO_URL,
+        mongoUrl: configEnv.mongoUrl,
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         ttl: 60
     }),
@@ -52,19 +57,20 @@ app.use(session({
     saveUninitialized: true
 }));
 
+//middeleware para passport
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Router
 app.use('/', router);
 
-const connectMongoDB = async () => {
+// Conexión Mongo
+const mongoInstance = async () => {
     try {
-        await mongoose.connect(MONGO_URL);
-        console.log("Conectado con exito a MongoDB usando Moongose.");
+        await MongoSingleton.getInstance();
     } catch (error) {
-        console.error("No se pudo conectar a la BD usando Moongose: " + error);
-        process.exit();
+        console.log(error);
     }
 };
-connectMongoDB();
+mongoInstance();
