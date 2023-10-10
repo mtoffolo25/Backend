@@ -2,7 +2,7 @@ import passport from "passport";
 import envCongif from "./env.config.js";
 import GitHubStrategy from "passport-github2";
 import jwtStrategy from "passport-jwt";
-import userModel from '../models/user.js';
+import userModel from '../services/models/user.js';
 import {PRIVATE_KEY } from "../utils.js";
 
 
