@@ -6,7 +6,8 @@
       <div class="card-body">
         <h5 class="card-title">{{this.description}}</h5>
         <h6 class="card-text">${{this.price}}</h6>
-        <a href="/carts/{{this._id}}" class="btn btn-primary" id="{{this._id}}" type="submit">Agregar al Carrito</a>
+        <a href="/products/{{this.id}}" class="btn btn-primary" id="{{this.id}}" type="submit">Detalles</a>
+        <a href="/products" class="btn btn-primary" id="{{this.id}}" type="submit">Agregar al Carrito</a>
       </div>
     </div>
   {{/each}}
@@ -32,5 +33,3 @@
 {{else}}
 <h1>¡No existen productos para mostrar!</h1>
 {{/if}}
-
-<script src="/js/product.js"></script>

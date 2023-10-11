@@ -1,0 +1,20 @@
+{{#each detail}}
+  <div class="detailProduct">
+    <h1>Detalle del Producto</h1>
+
+    <div class="product-details">
+      <img src={{this.thumnails}} alt="" />
+      <h2>{{this.title}} {{this.description}}</h2>
+      <p>{{this.price}}</p>
+      <p>Categoría: {{this.category}}</p>
+      <p>Disponibilidad: {{this.stock}}</p>
+    </div>
+
+    <div class="product-actions">
+      <label for="quantity">Cantidad:</label>
+      <input type="number" id="quantity" name="quantity" value="1" min="1" />
+      <button class="add-to-cart">Agregar al Carrito</button>
+    </div>
+  </div>
+
+{{/each}}

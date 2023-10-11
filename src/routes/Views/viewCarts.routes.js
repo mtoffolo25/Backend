@@ -8,7 +8,8 @@ viewCart.get('/:cid', async (req, res) => {
     let page = parseInt(req.query.page);
     if (!page) page = 1;
 
-    const cartProducts= await cartModel.findOne({_id : cid}).populate('products.product');
+    
+    const cartProducts= await cartModel.findById({_id : cid}).populate('products.product');
 
     if (!cartProducts) {
             return res.status(404).send('Carrito no encontrado');
