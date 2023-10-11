@@ -1,12 +1,12 @@
 {{#if isValid}}
 <div class="allProducts">
   {{#each docs}}
-    <div class="card" style="width: 18rem" id="{{this._id}}">
-      <img src={{this.thumbnail}} class="card-img-top" alt="..." />
+    <div class="card" style="width: 18rem">
+      <img src={{this.thumbnails}} class="card-img-top" alt="..." />
       <div class="card-body">
         <h5 class="card-title">{{this.description}}</h5>
         <h6 class="card-text">${{this.price}}</h6>
-        <a href="" class="btn btn-primary" id="addCart" type="submit">Agregar al Carrito</a>
+        <a href="/carts/{{this._id}}" class="btn btn-primary" id="{{this._id}}" type="submit">Agregar al Carrito</a>
       </div>
     </div>
   {{/each}}
@@ -33,4 +33,4 @@
 <h1>¡No existen productos para mostrar!</h1>
 {{/if}}
 
-<script src="/js/addCart.js"></script>
+<script src="/js/product.js"></script>

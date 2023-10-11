@@ -1,4 +1,4 @@
-import { cartModel } from "./models/cart.js";
+import { cartModel } from "../models/cartModel.js";
 
 export default class CartManager {
 
@@ -25,7 +25,7 @@ export default class CartManager {
 
     async getProductsOfCartById(id) {
         try {
-            const cart = await cartModel.findById(id).populate('products.product');
+            const cart = await cartModel.findById(id);
             return cart ? cart.products : false;
         } catch (error) {
             console.log(error);
