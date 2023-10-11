@@ -6,6 +6,7 @@ import userViewRouter from "./Users/user.views.routes.js";
 import cookiesRouter from "./Session/session.routes.js";
 import cartRouter from "./Mongo/carts.routes.js"
 import productRouter from "./Mongo/products.routes.js"
+import detailProducts from "./Views/viewDetail.router.js";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.use('/users', userViewRouter);
 router.use('/cookies', cookiesRouter);
 router.use('/products', viewProducts);
 router.use("/cart", viewCart);
+router.use("/products/detail", detailProducts);
 
 export default router;
 
