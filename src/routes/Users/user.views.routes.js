@@ -16,8 +16,5 @@ userViewRouter.get("/", (req, res) => {
     });
 });
 
-userViewRouter.get("/error", (req, res) => {
-    res.render("error");
-});
 
 export default userViewRouter;
