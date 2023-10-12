@@ -7,7 +7,7 @@
         <h5 class="card-title">{{this.description}}</h5>
         <h6 class="card-text">${{this.price}}</h6>
         <a href="/products/detail/{{this.id}}" class="btn btn-primary" id="{{this.id}}" type="submit">Detalles</a>
-        <a href="/products" class="btn btn-primary" id="{{this.id}}" type="submit">Agregar al Carrito</a>
+        <a href="/" class="btn btn-primary" id="{{this.id}}" type="submit">Agregar al Carrito</a>
       </div>
     </div>
   {{/each}}
@@ -15,18 +15,21 @@
 <br>
 <div class="pagination">
   {{#if hasPrevPage}}
-    <a href={{this.prevLink}}>
-      Anterior
-    </a>
+     <li class="page-item">
+      <a class="page-link" href={{this.prevLink}}>Anterior</a>
+    </li>
   {{/if}}
 
   &nbsp;
-  {{this.page}}
+   <li class="page-item">
+      <a class="page-link" href="">{{page}}</a>
+    </li>
   &nbsp;
 
   {{#if hasNextPage}}
-    <a href={{this.nextLink}}>
-      Siguiente</a>
+    <li class="page-item">
+      <a class="page-link" href={{this.nextLink}}>Siguiente</a>
+    </li>
   {{/if}}
 
 </div>

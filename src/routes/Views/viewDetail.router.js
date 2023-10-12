@@ -5,7 +5,7 @@ const detailProducts = Router();
 
 detailProducts.get('/:pid', async (req, res) => {
     let pid = req.params.pid;
-    let detail = await productModel.findById(pid);
+    let detail = await productModel.findById(pid).lean();
     res.render('detailProducts', detail);
 })
 

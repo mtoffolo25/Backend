@@ -1,18 +1,18 @@
 {{detail}}
-  <div class="detailProduct">
+  <div class="cardDetail">
     <h1>Detalle del Producto</h1>
 
     <div class="product-details">
       <img src={{thumbnails}} alt="" />
       <h2>{{title}} {{description}}</h2>
-      <p>Precio: {{price}}</p>
-      <p>Categoría: {{category}}</p>
-      <p>Disponibilidad: {{stock}}</p>
+      <h4>Precio:</h4><p>${{price}}</p>
+      <h4>Categoría:</h4><p>{{category}}</p>
+      <h4>Disponibilidad:</h4><p>{{stock}}</p>
     </div>
 
     <div class="product-actions">
-      <label for="quantity">Cantidad:</label>
-      <input type="number" id="quantity" name="quantity" value="1" min="1" />
-      <button class="add-to-cart">Agregar al Carrito</button>
+      <label style="margin-right: 10px;" for="quantity"><h4>Cantidad:</h4></label>
+      <input style="margin-right: 10px;" type="number" id="quantity" name="quantity" value="1" min="1" />
+      <button class="btn btn-primary">Agregar al Carrito</button>
     </div>
   </div>

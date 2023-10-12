@@ -1,3 +1,8 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    background-color:6C0376;
+}
 
 .allProducts {
     display: flex;
@@ -59,3 +64,43 @@ h6 a i {
     margin: 15px;
 }
 
+.cardDetail {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    align-items: center;
+    margin: 7%;
+    padding: 7%;
+}
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-actions {
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:space-between;
+}
+
+#quantity {
+    border-radius: 10%;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:start;
+    padding-left: 15px;
+    background-color:6C0376;
+    height: 35%;
+}
+
+.partFooter label {
+    color: white;
+}
