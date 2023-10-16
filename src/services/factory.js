@@ -12,7 +12,7 @@ async function initializeMongoService() {
     try {
         await MongoSingleton.getInstance()
 
-        //Inicializo distinitos servicios
+        //Inicializo distintos servicios
         const { default: UserDaoMongo } = await import("./dao/Mongo/user.service.js")
         userService = new UserDaoMongo()
 

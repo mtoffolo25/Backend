@@ -1,6 +1,4 @@
-import {userService} from '../services/factory.js';
-
-/* const services = new userService(); */
+import { userService } from "../services/factory.js";
 
 // controller registro por formulario
 export  const  registerController = async (req, res) => {
@@ -13,7 +11,7 @@ export  const  registerController = async (req, res) => {
         password 
     };
     const result = await userService.save(user, res);
-    res.send({ status: "200", message: "Usuario creado con exito con ID: " + result.id });
+    res.send({ status: "200", message: "Usuario creado con exito con ID: "});
 };
 
 //controler login

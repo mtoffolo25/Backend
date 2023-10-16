@@ -1,114 +1,98 @@
 import { cartModel } from "./models/cartModel.js";
+import { productModel } from "./models/productModel.js";
 
-export default class CartManager {
 
-    async addCart() {
-        try {
-            const newCart = {
-                products: []
-            };
-            const result = await cartModel.create(newCart);
-            return { code: 200, status: `Carrito agregado con id: ${result.id}` };
-        } catch (error) {
-            console.log(error);
-        }
-    }
+export default class CartServices {
+    
+    //services create cart
+    createCart = async (data)=> {
+        let cartCreated = cartModel.create(data);
+        return cartCreated;     
+    };
 
-    async getCarts() {
-        try {
-            const carts = await cartModel.find();
-            return carts.map(cart => cart.toObject());
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async getProductsOfCartById(id) {
-        try {
-            const cart = await cartModel.findById(id);
-            return cart ? cart.products : false;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async addProductToCart(cid, pid) {
-        try {
-            const cart = await cartModel.findById(cid);
-            if (!cart) {
-                return { code: 404, status: 'carrito no encontrado' };
+    //services get cart by id
+    getCartById = async (id)=> {
+        const cart = await cartModel.findOne(id).populate('products.product');
+        if (cart) {
+            return cart; 
+        } else {
+            return null;
             }
-            const productExist = cart.products.find(product => product.product === pid);
-            if (productExist) {
-                productExist.quantity += 1;
+    };
+
+    //services add product to cart
+    prodInCart= async (cid, pid)=> {
+        const cart = await cartModel.findOne(cid);
+        const product = await productModel.findOne(pid); 
+        if (cart && product) {
+            const existingProduct = cart.products.find(p => p.product._id.toString() === product._id.toString());
+            if (existingProduct) {
+                existingProduct.quantity +=1;
             } else {
-                cart.products.push({ product: pid, quantity: 1 });
+                cart.products.push({ "product": product._id, "quantity": 1});}// Si el producto no existe en el carrito, lo agregamos
+            await cart.save();// Guardamos los cambios en el carrito
+            return cart;
+        } else {
+            return null;
+        }
+    };
+
+    //services delete product in cart
+    deleteProdInCart = async (cid, pid)=> {
+        const cart = await cartModel.findOne(cid );
+        const product = await productModel.findOne(pid); 
+        
+        if (cart && product) {
+            const existingProduct = cart.products.find(p => p.product._id.toString() === product._id.toString());
+            if (existingProduct) {
+                cart.products.splice(cart.products.indexOf(existingProduct), 1);
             }
             await cart.save();
-            return { code: 200, status: 'producto agregado al carrito' };
-        } catch (error) {
-            console.log(error);
+            return cart;
+        } else {
+            return null;
         }
-    }
+};
 
-    async removeProductFromCart(cid, pid) {
-        try {
-            const result = await cartModel.updateOne(
-                { _id: cid },
-                { $pull: { products: { product: pid } } }
-            );
-            if (result.acknowledged === true) {
-                return { code: 200, status: 'Producto eliminado del carrito' };
+    //services reduce product in cart
+    reduceProdQuantity = async (cid, pid)=> {
+        const cart = await cartModel.findOne(cid );
+        const product = await productModel.findOne(pid); 
+        
+        if (cart && product) {
+            const existingProduct = cart.products.find(p => p.product._id.toString() === product._id.toString());
+            if (existingProduct) {
+                existingProduct.quantity > 1 ?
+                existingProduct.quantity -=1 :
+                cart.products.splice(cart.products.indexOf(existingProduct), 1);
             }
-            return { code: 404, status: 'Producto no encontrado en el carrito' };
-        } catch (error) {
-            console.log(error);
+            await cart.save();
+            return cart;
+        } else {
+            return null;
         }
-    }
-    
-    async updateCart(cid, products) {
-        try {
-            const result = await cartModel.updateOne(
-                { _id: cid },
-                { products: products }
-            );
-            if (result.acknowledged === true) {
-                return { code: 200, status: 'Carrito actualizado exitosamente' };
-            }
-            return { code: 404, status: 'Carrito no encontrado' };
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    
-    async updateProductQuantity(cid, pid, quantity) {
-        try {
-            console.log(`cid: ${cid}, pid: ${pid}, quantity: ${quantity}`);
-            const result = await cartModel.updateOne(
-                { _id: cid, 'products.product': pid },
-                { $set: { 'products.$.quantity': quantity } }
-            );
-            if (result.acknowledged === true) {
-                return { code: 200, status: 'Cantidad de producto actualizada' };
-            }
-            return { code: 404, status: 'Producto no encontrado en el carrito' };
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    };
 
-    async removeAllProductsFromCart(cid) {
-        try {
-            const result = await cartModel.updateOne(
-                { _id: cid },
-                { products: [] }
-            );
-            if (result.acknowledged === true) {
-                return { code: 200, status: 'Todos los productos han sido eliminados del carrito' };
-            }
-            return { code: 404, status: 'Carrito no encontrado' };
-        } catch (error) {
-            console.log(error);
+    //services delete all products in cart
+    deleteAll = async (cid)=> {
+        const cart = await cartModel.findOne(cid);     
+        if (cart) {
+            cart.products.splice (0, cart.products.length);
+            await cart.save();
+            return cart;
+        } else {
+            return null;
         }
-    }
+    };
+
+    cartRender = async (cid, page) => {
+        const cartProducts= await cartModel.paginate({_id : cid},{page, lean: true, populate: {path : 'products.product'}  })
+
+        if (!cartProducts) {
+            return res.status(404).send('Carrito no encontrado');
+        }else {
+            return cartProducts;
+        }
+    };
+
 }

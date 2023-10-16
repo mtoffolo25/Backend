@@ -41,7 +41,7 @@ export default class CartService {
             // Intentamos analizar el contenido del archivo como JSON
             this.#carts = JSON.parse(cartsFile);
             let id = this.#carts.length + 1
-            let cart = {
+            let cartCreated = {
                 products: data.products,
                 id:id
             }
@@ -53,8 +53,8 @@ export default class CartService {
             this.#carts.push(cart);
             // Guardamos el array de carritos actualizado en el archivo
             await this.#fileSystem.promises.writeFile(this.#cartFilePath, JSON.stringify(this.#carts, null, 2));
-            if (cart) {
-                return cart;
+            if (cartCreated) {
+                return cartCreated;
             }
         } catch (error) {
             console.error(`Error al crear el carrito nuevo: ${JSON.stringify(cart)}, detalle del error: ${error}`);
