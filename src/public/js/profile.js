@@ -8,7 +8,7 @@ const isAdmin = accessAdmin.value === "admin"
 
 logout.addEventListener('click', e => {
     e.preventDefault();
-    fetch('/api/users/logout', {
+    fetch('/cookies/logout', {
         method: 'GET',
     }).then(result => {
         if (result.status === 200) {

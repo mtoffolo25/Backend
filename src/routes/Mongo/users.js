@@ -4,33 +4,32 @@ import passport from 'passport';
 
 
 
-const sessionRouter = Router();
+const userRouter = Router();
 
-//Registramos al usuario en la base de datos MongoDB
-sessionRouter.post("/register", registerController );
+userRouter.post("/register", registerController );
 
-sessionRouter.post('/login', loginController)
+userRouter.post('/login', loginController)
 
-sessionRouter.get('/logout', logoutController)
+userRouter.get('/logout', logoutController)
 
-sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}))
+userRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}))
 
-sessionRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/github/error'}),gitHubCallbackController)
+userRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/github/error'}),gitHubCallbackController)
 
-sessionRouter.get('/error', (req, res) => {
+userRouter.get('/error', (req, res) => {
     res.render('error', {error: "No se pudo autenticar el usuario usando GitHub"})
 });
 
-sessionRouter.get("/fail-register", (req, res) => {
+userRouter.get("/fail-register", (req, res) => {
     res.status(401).send({ status: "error", message: "Error al registrar el usuario" })
 })
-sessionRouter.get("/fail-login", (req, res) => {
+userRouter.get("/fail-login", (req, res) => {
     res.status(401).send({ status: "error", message: "Error al loguear el usuario" })
 })
 
 
 
-sessionRouter.get('/private/:role', auth, (req, res) =>{
+userRouter.get('/private/:role', auth, (req, res) =>{
     res.render('admin')
 });
 
@@ -47,4 +46,4 @@ function auth(req, res, next){
 
 
 
-export default sessionRouter;
+export default userRouter;
