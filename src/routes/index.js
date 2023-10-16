@@ -16,7 +16,7 @@ router.use('/', sessionRouter);
 router.use('/users', userViewRouter);
 router.use('/cookies', cookiesRouter);
 router.use('/products', viewProducts);
-router.use("/cart", viewCart);
+router.use("/carts", viewCart);
 router.use("/products/detail", detailProducts);
 
 export default router;
