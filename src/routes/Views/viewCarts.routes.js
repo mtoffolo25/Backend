@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cartModel } from "../../services/models/cartModel.js";
+import { cartModel } from "../../services/dao/Mongo/models/cartModel.js";
 
 const viewCart = Router();
 

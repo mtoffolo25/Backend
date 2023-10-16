@@ -2,7 +2,7 @@ import passport from "passport";
 import envCongif from "./env.config.js";
 import GitHubStrategy from "passport-github2";
 import jwtStrategy from "passport-jwt";
-import userModel from "../services/models/userModel.js";
+import userModel from "../services/dao/Mongo/models/userModel.js";
 import {PRIVATE_KEY } from "../utils.js";
 
 
@@ -79,10 +79,8 @@ const initializePassport = () => {
 
 const cookieExtractor=(req)=> {
     let token = null;
-    console.log("entrando a cookie extractor");
     if (req && req.cookies) {
         token = req.cookies["jwtCookieToken"];
-        console.log("token encontrado " + token);
     }
     return token;
 };
