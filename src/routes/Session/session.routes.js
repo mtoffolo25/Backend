@@ -1,52 +1,50 @@
-import { Router } from "express";
-import passport from "passport";
+import { Router } from 'express';
+import {registerController, loginController, logoutController, gitHubCallbackController} from "../../controllers/user.controller.js";
+import passport from 'passport';
+
+
 
 const sessionRouter = Router();
 
-sessionRouter.get("/github", passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { });
+//Registramos al usuario en la base de datos MongoDB
+sessionRouter.post("/register", registerController );
 
+sessionRouter.post('/login', loginController)
 
-sessionRouter.get("/githubcallback", passport.authenticate('github', { failureRedirect: '/github/error' }), async (req, res) => {
-    const user = req.user;
-    req.session.user = {
-        name: `${user.first_name} ${user.last_name}`,
-        email: user.email,
-        age: user.age
-    };
-    req.session.admin = true;
-    res.redirect("/users");
+sessionRouter.get('/logout', logoutController)
+
+sessionRouter.get('/github', passport.authenticate('github', {scope: ['user:email']}))
+
+sessionRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/github/error'}),gitHubCallbackController)
+
+sessionRouter.get('/error', (req, res) => {
+    res.render('error', {error: "No se pudo autenticar el usuario usando GitHub"})
 });
-
-
-sessionRouter.post("/register", passport.authenticate(
-    'register', { failureRedirect: '/fail-register' })
-    , async (req, res) => {
-        console.log("Registrando nuevo usuario.");
-        res.status(201).send({ status: "success", message: "Usuario creado con extito." });
-    });
-
-sessionRouter.post("/login", passport.authenticate(
-    'login', { failureRedirect: '/fail-login' })
-    , async (req, res) => {
-        console.log("User found to login:");
-        const user = req.user;
-        console.log(user);
-        if (!user) return res.status(401).send({ status: "error", error: "El usuario y la contraseña no coinciden!" });
-        req.session.user = {
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            age: user.age
-        };
-        req.session.admin = true;
-        res.send({ status: "success", payload: req.session.user, message: "Primer logueo realizado!! :)" })
-    });
 
 sessionRouter.get("/fail-register", (req, res) => {
-    res.status(401).send({ error: "Failed to process register!" });
+    res.status(401).send({ status: "error", message: "Error al registrar el usuario" })
+})
+sessionRouter.get("/fail-login", (req, res) => {
+    res.status(401).send({ status: "error", message: "Error al loguear el usuario" })
+})
+
+
+
+sessionRouter.get('/private/:role', auth, (req, res) =>{
+    res.render('admin')
 });
 
-sessionRouter.get("/fail-login", (req, res) => {
-    res.status(401).send({ error: "Failed to process login!" });
-});
+//autenticación
+function auth(req, res, next){
+    const role = req.params.role;
+    if (role === "admin") {
+        return next();
+    } else{
+        return res.status(403).send("Usuario no autorizado para ingresar a este recurso.");
+    }
+    
+}
+
+
 
 export default sessionRouter;
