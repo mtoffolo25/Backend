@@ -1,8 +1,8 @@
-import { CartModel } from "./models/cartModel.js";
-import userModel  from "./models/userModel.js";
-import { ProductModel } from "./models/productModel.js";
+import { cartModel } from "./models/cartModel.js";
+import userModel from "./models/userModel.js";
+import { productModel } from "./models/productModel.js";
 import { TicketModel } from "./models/ticketModel.js";
-import CartServices from "./cart.services.js";
+import CartServices from "./cart.service.js";
 
 
 const cartServices = new CartServices();
@@ -20,7 +20,7 @@ async function getUser (userId) {
 
 //busca al carrito para obtener datos
 async function getCartById (cartId) {
-    let cartData = await CartModel.findOne({_id: cartId});
+    let cartData = await cartModel.findOne({_id: cartId});
     return cartData;
 }
 
@@ -57,7 +57,7 @@ export default class TicketServices {
                     console.log(`No hay stock suficiente para el producto id: ${cart.products[i].product._id}, el producto queda en el carrito de compras hasta que haya stock disponible`);
                 } else {
                     productsWithStock.push(cart.products[i]);
-                    await ProductModel.updateOne(
+                    await productModel.updateOne(
                         { _id: cart.products[i].product._id },
                         { $inc: { stock: -cart.products[i].quantity } }
                     );
