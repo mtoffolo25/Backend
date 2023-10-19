@@ -15,7 +15,7 @@ volver.addEventListener('click', ()=>{
 
 async function getCartData(cid){
     try {
-        const response = await fetch(`/api/carts/search/${cid}`);
+        const response = await fetch(`/carts/search/${cid}`);
         if (response) {
             const data = await response.json();
             return data;
