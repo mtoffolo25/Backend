@@ -4,10 +4,11 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 const cartCollection = 'carts';
 
 const cartSchema = new mongoose.Schema({
+    userId: String,
     products: {
         type: [
             {
-                product:{
+                product: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "products"
                 },
@@ -17,11 +18,11 @@ const cartSchema = new mongoose.Schema({
                 },
             }
         ],
-        default:[]
-    }  
+        default: []
+    }
 })
 
-cartSchema.pre('findOne', function() {	
+cartSchema.pre('findOne', function () {
     this.populate('products.product');
 })
 
