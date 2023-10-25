@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 import envCongif from './config/env.config.js'
+import { faker } from '@faker-js/faker';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,6 +50,18 @@ export const authToken = (req, res, next) => {
         req.user = credentials.user;
         next();
     });
+};
+
+faker.locale = 'es'; //Idioma de los datos
+
+export const generateProduct = () => {
+    return {
+        title: faker.commerce.productName(),
+        price: faker.commerce.price(),
+        stock: faker.random.numeric(1),
+        id: faker.database.mongodbObjectId(),
+        image: faker.image.image()
+    }
 };
 
 
