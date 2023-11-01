@@ -10,6 +10,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import MongoSingleton from './config/db.js';
 import configEnv from './config/env.config.js';
+import { addLogger } from './config/logger_BASE.js';
 import './config/db.js'
 
 const app = express();
@@ -20,6 +21,8 @@ const PORT = configEnv.port;
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(addLogger);
 
 //Middleware para archivos estaticos
 app.use(express.static(__dirname + '/public'));
