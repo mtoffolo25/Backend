@@ -7,7 +7,7 @@ import cartRouter from "./Mongo/carts.routes.js"
 import productRouter from "./Mongo/products.routes.js"
 import detailProducts from "./Views/viewDetail.router.js";
 import ticketRouter from "./Mongo/ticket.routes.js";
-import { mockingProducts } from "../controllers/mocking.controller.js";
+import mockingProducts from "./Mock/mocking.routes.js";
 
 
 const router = Router();
@@ -19,8 +19,9 @@ router.use('/users', userViewRouter);
 router.use('/cookies', cookiesRouter);
 router.use('/products', viewProducts);
 router.use('/products/detail', detailProducts);
-router.use('/ticket', ticketRouter)
-router.use('/mockingProducts', mockingProducts)
+router.use('/ticket', ticketRouter);
+router.use('/mockingProducts', mockingProducts);
+
 
 export default router;
 

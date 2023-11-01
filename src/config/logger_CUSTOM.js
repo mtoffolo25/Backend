@@ -20,14 +20,14 @@ const customLevelsOptions = {
     }
 };
 
-//Custom Logger:
+//Logger de Desarrollo
 const devLogger = winston.createLogger({
-    //Levels:
+
     levels: customLevelsOptions.levels,
     transports: [
         new winston.transports.Console(
             {
-                level: "info",
+                level: "debug",
                 format: winston.format.combine(
                     winston.format.colorize({ colors: customLevelsOptions.colors }),
                     winston.format.simple()
@@ -44,26 +44,26 @@ const devLogger = winston.createLogger({
     ]
 });
 
-//Creating our logger:
+//Logger de producción
 const prodLogger = winston.createLogger({
     levels: customLevelsOptions.levels,
-    //Declare transports:
+
     transports: [
-        new winston.transports.Console({ level: "http" }),
-        new winston.transports.File({ filename: './errors.log', level: 'warning' })
+        new winston.transports.Console({ level: "info" }),
+        new winston.transports.File({ filename: './errors.log', level: 'error' })
     ]
 });
 
-//Declare a middleware:
+//Middleware:
 export const addLogger = (req, res, next) => {
     if (config.environment === 'production') {
         req.logger = prodLogger;
         req.logger.warning("Prueba de log level warn!");
-        req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
+        req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)
     } else {
         req.logger = devLogger;
         req.logger.warning("Prueba de log level warning!");
-        req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
+        req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
     }
     next();
 };
