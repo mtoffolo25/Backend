@@ -24,3 +24,15 @@
 {"level":"warn","message":"GET en /products - at 1/11/2023 - 19:32:24"}
 {"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:32:24"}
 {"level":"warn","message":"GET en /products/detail/64ee1edcec71e4c0df0ba3df - at 1/11/2023 - 19:34:42"}
+{"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:34:42"}
+{"level":"warn","message":"GET en /js/detailProducts.js - at 1/11/2023 - 19:34:42"}
+{"level":"warn","message":"GET en /products - at 1/11/2023 - 19:36:31"}
+{"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:36:32"}
+{"level":"warn","message":"GET en /carts - at 1/11/2023 - 19:36:43"}
+{"level":"warn","message":"GET en /products - at 1/11/2023 - 19:36:45"}
+{"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:36:46"}
+{"level":"warn","message":"GET en /products/Notebooks - at 1/11/2023 - 19:38:27"}
+{"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:38:28"}
+{"level":"warn","message":"GET en /products/detail/64ee22fbec71e4c0df0ba3f5 - at 1/11/2023 - 19:38:38"}
+{"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:38:38"}
+{"level":"warn","message":"GET en /js/detailProducts.js - at 1/11/2023 - 19:38:38"}

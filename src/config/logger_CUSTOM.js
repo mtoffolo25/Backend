@@ -1,5 +1,5 @@
-import { winston } from "winston";
-import config from "./config.js";
+import winston  from "winston";
+import envConfig from "./env.config.js";
 
 //Custom logger options:
 const customLevelsOptions = {
@@ -37,7 +37,7 @@ const devLogger = winston.createLogger({
         new winston.transports.File(
             {
                 filename: './errors.log',
-                level: 'warning', //Cambiamos el logger level name.
+                level: 'error', //Cambiamos el logger level name.
                 format: winston.format.simple()
             }
         )
@@ -56,7 +56,7 @@ const prodLogger = winston.createLogger({
 
 //Middleware:
 export const addLogger = (req, res, next) => {
-    if (config.environment === 'production') {
+    if (envConfig.enviroment === 'prod') {
         req.logger = prodLogger;
         req.logger.warning("Prueba de log level warn!");
         req.logger.info(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`)

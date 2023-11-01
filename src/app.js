@@ -10,7 +10,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import MongoSingleton from './config/db.js';
 import configEnv from './config/env.config.js';
-import { addLogger } from './config/logger_BASE.js';
+import { addLogger } from './config/logger_CUSTOM.js';
 import './config/db.js'
 
 const app = express();
