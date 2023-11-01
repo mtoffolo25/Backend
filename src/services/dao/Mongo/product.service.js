@@ -2,86 +2,50 @@ import { productModel } from "./models/productModel.js";
 
 export default class ProductManager {
 
-    async isCodeUnique(code) {
-        try {
-            const products = await this.getProducts();
-            return products.some((product) => product.code === code);
-        } catch (error) {
-            console.log(error);
+    createProduct = async (product) => {
+        const response = await productModel.create(product);
+        if (response) {
+            return response;
+        } else {
+            return null;
         }
-    }
-    
-    validateFields(product) {
-        return (
-            product.title &&
-            product.description &&
-            typeof product.price === 'number' &&
-            typeof product.status === 'boolean' &&
-            typeof product.stock === 'number' &&
-            product.category &&
-            typeof product.title === 'string' &&
-            typeof product.description === 'string' &&
-            typeof product.category === 'string'
-        );
-    }
+    };
 
-    async addProduct(product) {
-        try {
-            if(await this.isCodeUnique(product)) {
-                return { code: 409, status: 'Este producto ya existe' };
-            }
-            if(!this.validateFields(product)) {
-                return { code: 400, status: 'Todos los campos del producto deben ser ingresados' };
-            }
-            let result = await productModel.create(product);
-            return { code: 200, status: 'Producto agregado', product: result };
-        } catch (error) {
-            console.log(error);
+    getAllProducts = async (limit, page, sort, filter) => {
+        const availableFilter = filter ? {} : { available: filter };
+        const options = { sort: { price: sort }, limit, page };
+        const response = await productModel.paginate(availableFilter, options);
+        if (response) {
+            return response;
+        } else {
+            return null;
         }
-    }
+    };
 
-    async getProducts(optionsQuery, options) {
-        try {
-            const products = await productModel.paginate(optionsQuery, options);
-            return products;
-        } catch (error) {
-            console.log(error);
+    getById = async (id) => {
+        const response = await productModel.findOne(id);
+        if (response) {
+            return response;
+        } else {
+            return null;
         }
-    }
+    };
 
-    async getProductById(id) {
-        try {
-            const product = await productModel.findById(id);
-            return product ? product : false;
-        } catch (error) {
-            console.log(error);
+    update = async (id, product) => {
+        const response = await productModel.updateOne(id, product);
+        if (response) {
+            return response;
+        } else {
+            return null;
         }
-    }
+    };
 
-    async deleteProductById(id) {
-        try {
-            const product = await this.getProductById(id);
-            if(product) {
-                await productModel.deleteOne({ _id: id });
-                return { code: 200, status: 'Producto eliminado' };
-            } else {
-                return { code: 404, status: 'Producto no existe' };
-            }
-        } catch (error) {
-            console.log(error);
+    delete = async (id) => {
+        const response = await productModel.deleteOne(id);
+        if (response) {
+            return response;
+        } else {
+            return null;
         }
-    }
-
-    async updateProduct(id, updatedFields) {
-        try {
-            const product = await productModel.findByIdAndUpdate(id, updatedFields, { new: true });
-            if(product) {
-                return { code: 200, status: 'Producto actualizado' };
-            } else {
-                return { code: 404, status: 'Producto no encontrado' };
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    };
 }

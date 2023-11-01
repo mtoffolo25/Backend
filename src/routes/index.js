@@ -20,7 +20,7 @@ router.use('/cookies', cookiesRouter);
 router.use('/products', viewProducts);
 router.use('/products/detail', detailProducts);
 router.use('/ticket', ticketRouter)
-router.use('/mockingproducts', mockingProducts)
+router.use('/mockingProducts', mockingProducts)
 
 export default router;
 
