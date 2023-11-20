@@ -125,11 +125,10 @@ components:
           type: string
           description: Fecha autogenerada por MongoDB
       example:
-          _id: "64ee2366ec71e4c0df0ba3f9",
-        title: "Discos",
-        description: "Disco Sólido SSD Kingston 240GB A400 500MB/s",
-        price: 16610,
-        stock: 5,
-        category: "Almacenamiento",
-        thumbnails: "https://compragamer.net/pga/imagenes_publicadas/compragamer_Imganen_general_9269_Disco_S__lido_SSD_Kingston_240GB_A400_500MB_s_c9de3151-grn.jpg",
-        __v: 0
+          title: "Auriculares"
+          description: "Prueba1"
+          price: 45000
+          thumbnail: "http://www.auriculares.com"
+          code: "prueba2266771"
+          stock: 20
+          available: true

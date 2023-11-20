@@ -1,7 +1,7 @@
 paths:
   /carts/:
     post:
-      summary: Creo un nuevo carrito (se crean automaticamente al crear un nuevo usuario y se relacionan por population)
+      summary: Creo un nuevo carrito (Se crean automáticamente al crear un nuevo usuario y se relacionan por population).
       tags:
         - Carts
       requestBody:
