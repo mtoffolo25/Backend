@@ -1,89 +1,23 @@
-import { Router } from "express";
-import ProductManager from "../../services/dao/Mongo/product.service.js";
+import express from 'express';
+/* import { ProductModel } from '../../services/db/models/productModel.js'; */
+import { createProduct, getProducts, getProdById, updateProdById, deleteProdById  } from '../../controllers/product.controller.js';
 
-const router = Router();
-const manager = new ProductManager();
+const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const { limit, page, sort, query, category, availability } = req.query;
+//Create Product
+router.post('/createOne', createProduct );
 
-        const options = {
-            page: parseInt(page) || 1,
-            limit: parseInt(limit) || 10,
-        };
-        
-        const optionsQuery = {};
-        
-        if (query) {
-            optionsQuery.title = { $regex: new RegExp(query, "i") };
-        }
-        
-        if (category) {
-            optionsQuery.category = category;
-        }
-        
-        const availabilityMap = {
-            available: true,
-            unavailable: false,
-        };
-        
-        if (availability in availabilityMap) {
-            optionsQuery.status = availabilityMap[availability];
-        }
-        
-        const sortMap = {
-            asc: 1,
-            desc: -1,
-        };
-        
-        if (sort in sortMap) {
-            options.sort = { price: sortMap[sort] };
-        }
-        
-        const result = await manager.getProducts(optionsQuery, options);
-        
-        res.send({ status: "success", payload: result });
-    } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-    }
-});
+//Get all with filters
+router.get('/', getProducts);
 
-router.post('/', async (req, res) => {
-    try {
-        let productToAdd = req.body;
-        if (!('status' in productToAdd)) {
-            productToAdd.status = true;
-        }
-        let status = await manager.addProduct(productToAdd);
-        res.status(status.code).json({status: status.status})
-    } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-    }
-});
+//Get product by id
+router.get('/findOne/:pid', getProdById );
 
-router.get('/:pid', async (req, res) => {
-    const { pid } = req.params;
-    const product = await manager.getProductById(pid);
-    if(product) {
-        res.send({status: "success", payload: product });
-    } else {
-        res.status(404).json({'error': 'Producto no encontrado'});
-    }
-});
+//Update product by id
+router.put('/updateOne/:pid', updateProdById );
 
-router.put('/:pid', async (req, res) => {
-    const {pid} = req.params;
-    let productToUpdate = req.body;
-    let status = await manager.updateProduct(pid, productToUpdate);
-    res.status(status.code).json({status: status.status});
-})
+//Delete product by id
+router.delete('/deleteOne/:pid', deleteProdById );
 
-router.delete('/:pid', async (req, res) => {
-  const { pid } = req.params;
-  const status = await manager.deleteProductById(pid);
-  const io = getIO();
-  res.status(status.code).json({ status: status.status });
-});
 
 export default router;

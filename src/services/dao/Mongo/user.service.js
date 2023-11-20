@@ -16,59 +16,65 @@ export default class UserService {
         return users.map(user => user.toObject());
     };
 
-    save = async (data) => {
-        const exists = await userModel.findOne({ email: data.email });
-        if (exists) {
-            return null;
-        };
+    save = async (data) => {    
         try {
-            data.password = createHash(data.password);
+            const exists = await userModel.findOne({ email:data.email });
+            if (exists) {
+                return null;
+            };
+            data.password = createHash(data.password); 
             let user = await userModel.create(data);
             const userId = user._id.toString();
-            const body = {
+            const  body  = {
                 userId,
                 products: [],
             }
             let cart = await cartServices.createCart(body);
-
+    
             if (cart && user) {
-                user.carts.push({ "cart": cart._id });
+                user.carts.push({ "cart": cart._id});
                 await user.save();
                 return user;
-
+            
             } else {
                 return null;
             }
         } catch (error) {
-            throw new Error("Error en la creación del usuario: " + error.message);
+            throw new Error("Error en la creación del usuario: " + error.message); 
+            
         }
-
-    };
-
-    login = async (email, password, res) => {
-        const exists = await userModel.findOne({ email });
-        if (!exists) {
-            return console.log("Usuario no encontrado");
-        }
-        if (!isValidPassword(exists, password)) {
-            return console.log("Los datos ingresados son incorrectos");
-        }
-        let cartData = await cartServices.getCartById(exists.carts[0].cart._id)
-        const tokenUser = {
-            name: `${exists.first_name} ${exists.last_name}`,
-            email: exists.email,
-            role: exists.role,
-            cart: exists.carts[0].cart._id,
-            cartLength: cartData.products.length
+    
         };
-        const accessToken = generateToken(tokenUser);
-        //Cookies
-        res.cookie('jwtCookieToken', accessToken, {
-            maxAge: 60000,
-            httpOnly: true, // no expone la cookie cuando esta en true
-        })
-    };
 
+        login = async (email, password, res) => {
+
+            try {
+                const exists = await userModel.findOne({ email });
+                const isValid = isValidPassword(exists, password);
+    
+                if(!exists || !isValid){
+                    return null
+                }
+                let cartData = await cartServices.getCartById(exists.carts[0].cart._id)
+                const tokenUser = {
+                    name: `${exists.first_name} ${exists.last_name}`,
+                    email: exists.email,
+                    role: exists.role,
+                    cart: exists.carts[0].cart._id,
+                    cartLength: cartData.products.length
+                };
+                const accessToken = generateToken(tokenUser);
+                //Cookies
+                res.cookie('jwtCookieToken', accessToken, {
+                    maxAge: 60000,  
+                    httpOnly: true, // no expone la cookie cuando esta en true
+                })
+                return true
+    
+            } catch (error) {
+                res.status(500).send(error.message);
+            }
+        };
 
     logout = async (cookieName, res) => {
         res.clearCookie(cookieName);

@@ -11,19 +11,27 @@ export  const  registerController = async (req, res) => {
         password 
     };
     const result = await userService.save(user, res);
-    res.send({ status: "200", message: "Usuario creado con exito"});
+    if (result) {
+        req.logger.info("Usuario logueado con exito")
+        return res.send({ status: "200", message: "Usuario creado con exito con ID: " + result.id});
+    }else{
+        req.logger.error("Se intenta crear un usuario con email ya registrado en DB")
+        return res.status(401).send({ message: "Email ya registrado en la DB" });
+    }
 };
 
 //controler login
 export const loginController = async (req, res) => {
-    try {
         const { email, password } = req.body;
-        await userService.login(email, password, res);    
-        return res.status(200).send({message: "Usuario logueado con exito" });
-    
-    } catch (error) {
-        return res.status(500).send({ status: 'error', message: "Error interno de la aplicacion, controller" })
-    }
+        const user = await userService.login(email, password, res);
+        if (user) {
+            req.logger.info("Usuario logueado con exito")
+            return res.status(200).send({ message: "Usuario valido" }); 
+        }else{
+            req.logger.error("Usuario no valido, Username o Password incorrecto")
+            return res.status(401).send({ message: "Usuario no valido" });
+        }
+        
 };
 
 export const logAuthenticate = async (req, res) => {

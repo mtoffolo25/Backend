@@ -1,15 +1,18 @@
 const form = document.getElementById('formLogin');
 
+//request a la api de JWT
 form.addEventListener('submit', e => {
     e.preventDefault();
     const data = new FormData(form);
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
-    fetch('/users/login', {
+    fetch('/api/users/login', {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
+            //aca se setean los headers para el acceso con jwt
+            
         }
     }).then(result => {
         if (result.status === 200) {

@@ -12,11 +12,29 @@ import MongoSingleton from './config/db.js';
 import configEnv from './config/env.config.js';
 import { addLogger } from './config/logger_CUSTOM.js';
 import './config/db.js'
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUIExpress from "swagger-ui-express"
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const PORT = configEnv.port;
+
+//Documentación
+const swaggerOption = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentación API allcomputers",
+            description: "Documentación para uso de swagger"
+        }
+    },
+    apis: [`./src/docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOption);
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+
 
 //Middlewares
 app.use(express.json());
