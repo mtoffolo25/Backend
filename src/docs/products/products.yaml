@@ -118,23 +118,18 @@ components:
         thumbnail:
           type: string
           description: Url de la imagen del producto
-        code:
-          type: string
-          description: Codigo alfanumerico del producto
         stock:
           type: number
           description: Cantidad de productos en stock
-        available:
-          type: boolean
-          description: Estado del producto segun stock
         updatedAt:
           type: string
           description: Fecha autogenerada por MongoDB
       example:
-          title: "Camisa de algodón"
-          description: "Prueba1"
-          price: 450
-          thumbnail: "http://www.camisaalgodon.com"
-          code: "prueba2266771"
-          stock: 20
-          available: true
+          _id: "64ee2366ec71e4c0df0ba3f9",
+        title: "Discos",
+        description: "Disco Sólido SSD Kingston 240GB A400 500MB/s",
+        price: 16610,
+        stock: 5,
+        category: "Almacenamiento",
+        thumbnails: "https://compragamer.net/pga/imagenes_publicadas/compragamer_Imganen_general_9269_Disco_S__lido_SSD_Kingston_240GB_A400_500MB_s_c9de3151-grn.jpg",
+        __v: 0
