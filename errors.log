@@ -36,3 +36,34 @@
 {"level":"warn","message":"GET en /products/detail/64ee22fbec71e4c0df0ba3f5 - at 1/11/2023 - 19:38:38"}
 {"level":"warn","message":"GET en /css/style.css - at 1/11/2023 - 19:38:38"}
 {"level":"warn","message":"GET en /js/detailProducts.js - at 1/11/2023 - 19:38:38"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Error al crear un producto"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Usuario no valido, Username o Password incorrecto"}
+{"level":"error","message":"Se intenta crear un usuario con email ya registrado en DB"}
+{"level":"error","message":"Usuario no valido, Username o Password incorrecto"}

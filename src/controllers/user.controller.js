@@ -12,7 +12,7 @@ export  const  registerController = async (req, res) => {
     };
     const result = await userService.save(user, res);
     if (result) {
-        req.logger.info("Usuario logueado con exito")
+        req.logger.info("Usuario creado con exito")
         return res.send({ status: "200", message: "Usuario creado con exito con ID: " + result.id});
     }else{
         req.logger.error("Se intenta crear un usuario con email ya registrado en DB")
