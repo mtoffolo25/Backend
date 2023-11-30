@@ -4,11 +4,18 @@ import {cartService} from "../services/factory.js";
 
 //controller create cart
 export const creatNewCart = async (req, res)=>{
-    const userId = req.body.userId;
+    const product = req.body.product;
+    const quantity = req.body.quantity;
     try {
         const body = {
-            userId,
-            products: [],
+            products: [
+                {
+                  product: {
+                    productId: product
+                  },
+                  quantity: quantity
+                }
+              ]
         };
         const result = await cartService.createCart(body);
     
@@ -97,7 +104,7 @@ export const cleanCart = async (req, res) => {
     try {
         const cart = await cartService.deleteAll({ _id: cid });     
         if (cart) {
-            res.send({ status: 'Success', payload: cart });
+            res.send({ status: 'Success'});
         } else {
             res.status(404).json({ error: 'Carrito o producto no encontrado' });
         }
