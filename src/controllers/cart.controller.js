@@ -3,7 +3,7 @@ import {cartService} from "../services/factory.js";
 
 
 //controller create cart
-export const creatNewCart = async (req, res)=>{
+export const creatNewCart = async (req, res) => {
     const product = req.body.product;
     const quantity = req.body.quantity;
     try {
@@ -18,30 +18,29 @@ export const creatNewCart = async (req, res)=>{
               ]
         };
         const result = await cartService.createCart(body);
-    
 
-    if (cart) {
-        res.send({ status: "200", message: "Carrito creado con exito con ID: " + result.id , payload: result})
-    }
-    
-    }catch (error) {
+        if (cart) {
+            res.send({ status: "200", message: "Carrito creado con exito con ID: " + result.id , payload: result})
+        }
+        
+    } catch (error) {
         console.error('Error al crear el carrito:', error);
         res.status(500).json({ error: 'Error interno del servidor', details: error.message }); 
     } 
 };
 
 //controller get cart by id
-export const searchCart = async (req, res)=>{
+export const searchCart = async (req, res) => {
     const cid = req.params.cid;
     try {
-        const cart = await cartService.getCartById({ _id : cid})
+        const cart = await cartService.getCartById({ _id: cid })
 
         if (cart) {
             res.send({ status: 'Success', payload: cart });
         } else {
             res.send({ status: '404', message: 'Carrito no encontrado' }); 
         }
-    }catch (error) {
+    } catch (error) {
         console.error('Error al buscar el carrito:', error);
         res.status(500).json({ error: 'Error interno del servidor', details: error.message }); 
     } 
