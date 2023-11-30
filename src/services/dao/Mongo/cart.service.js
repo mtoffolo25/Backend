@@ -5,8 +5,8 @@ import { productModel } from "./models/productModel.js";
 export default class CartServices {
     
     //services create cart
-    createCart = async (data)=> {
-        let cartCreated = cartModel.create(data);
+    createCart = async (cart)=> {
+        let cartCreated = cartModel.create(cart);
         return cartCreated;     
     };
 
