@@ -1,6 +1,6 @@
 import { Router } from "express";
 import viewProducts from "./Views/viewProducts.routes.js";
-import userRouter from "./Mongo/users.js";
+import userRouter from "./Mongo/users.routes.js";
 import userViewRouter from "./Views/user.views.routes.js";
 import cookiesRouter from "./Mongo/cookies.routes.js";
 import cartRouter from "./Mongo/carts.routes.js"
@@ -14,9 +14,9 @@ const router = Router();
 
 router.use('/api/products', productRouter );
 router.use('/carts', cartRouter);
-router.use('/', userRouter);
+router.use('/api/users', userRouter);
 router.use('/users', userViewRouter);
-router.use('/cookies', cookiesRouter);
+router.use('/session', cookiesRouter);
 router.use('/products', viewProducts);
 router.use('/products/detail', detailProducts);
 router.use('/ticket', ticketRouter);

@@ -1,6 +1,5 @@
 const form = document.getElementById('formLogin');
 
-//request a la api de JWT
 form.addEventListener('submit', e => {
     e.preventDefault();
     const data = new FormData(form);
@@ -15,13 +14,14 @@ form.addEventListener('submit', e => {
             
         }
     }).then(result => {
+        console.log(result);
         if (result.status === 200) {
             result.json()
             .then(json => { 
                 window.location.replace('/users');
             } 
             )}
-            else if (result.status === 401) {
+            else if (result.status === 500) {
                 alert('Usuario o contraseña incorrectos');
             };
     });

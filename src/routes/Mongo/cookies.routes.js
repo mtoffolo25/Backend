@@ -9,7 +9,7 @@ cookiesRouter.get('/',(req,res)=>{
     res.render('index',{})
 });
 
-cookiesRouter.get("/session", (req, res) => {
+cookiesRouter.get("/", (req, res) => {
     if (req.session.counter) {
         req.session.counter++;
         res.send(`Se ha visitado este sitio ${req.session.counter} veces.`);
