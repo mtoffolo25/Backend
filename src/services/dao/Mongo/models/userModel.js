@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const colection = 'users';
+const colleccionName = 'users';
 
-const userSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
     first_name: String,
     last_name: String,
     email: {
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         default: 'user',
-        enum : ['user', 'admin']
+        enum : ['user', 'admin', 'premium']
     },
     carts:{
         type:[
@@ -33,17 +33,19 @@ const userSchema = new mongoose.Schema({
             {
                 name: String,
                 reference : String,
-            }
+                status : Boolean
+            },
         ]
     },
     
-    last_connection:String
+    last_connection:String,
+    img_profile: String,
 })
 
-userSchema.pre('findOne', function() {
+schema.pre('findOne', function() {
     this.populate('carts.cart');
 })
 
-const userModel = mongoose.model(colection, userSchema)
+const userModel = mongoose.model(colleccionName, schema);
 
 export default userModel;

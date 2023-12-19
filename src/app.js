@@ -1,7 +1,7 @@
 import express from "express";
 import router from "./routes/index.js";
 import handlebars from "express-handlebars";
-import __dirname from './utils.js';
+import { __dirname } from "./utils.js";
 import http from 'http';
 import { Server } from "socket.io";
 import session from "express-session";

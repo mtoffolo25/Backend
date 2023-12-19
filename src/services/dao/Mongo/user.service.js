@@ -6,10 +6,15 @@ import { generateToken } from '../../../utils.js';
 import envConfig from '../../../config/env.config.js';
 import CartServices from "./cart.service.js"
 import UserDto from "../../dto/user.dto.js";
+import UserUpdt from "../../dto/userUpdt.dto.js"
+import { transporter } from "../../../utils.js";
 
 const cartServices = new CartServices();
 
 const PORT = envConfig.port
+
+
+
 export default class UserService {
 
     getAll = async () => {
@@ -54,13 +59,15 @@ export default class UserService {
             if(!exists || !isValid){  
                 return null
             }else{
-                let cartData = await cartServices.createCart()
+                let cartData = await cartServices.getCartById(exists.carts[0].cart._id)
                 let userUpdate = await userModel.updateOne({email: email}, {last_connection: new Date()})
                 const tokenUser = {
                 name: `${exists.first_name} ${exists.last_name}`,
                 email: exists.email,
                 role: exists.role,
+                img_profile: exists.img_profile,
                 cart: exists.carts[0].cart._id,
+                cartLength: cartData.products.length
             };
             const accessToken = generateToken(tokenUser);
             //Cookies
@@ -99,7 +106,6 @@ export default class UserService {
         res.redirect('/users');
     };
 
-
     loginShowProducts = async (page, req ,res) => {
         let result = await productModel.paginate({}, {page, lean: true });
             let prevLink = result.hasPrevPage ? `http://localhost:${PORT}/users?page=${result.prevPage}` : '';
@@ -126,7 +132,8 @@ export default class UserService {
 
     findById = async (id) => {
         let result = await userModel.findOne(id );
-        return result;
+        let userDto = new UserUpdt (result);
+        return userDto;
     };
 
     deleteUser = async (id) => {
@@ -139,7 +146,7 @@ export default class UserService {
         }
     };
 
-    getAllInactive = async () => {
+    deleteAllInactive = async () => {
         const fechaActual = new Date();
         const users = await userModel.find();
         const usersInactive = users.filter(user => {
@@ -148,14 +155,41 @@ export default class UserService {
             const minutos = Math.floor(diff / (1000 * 60));
             return minutos > 2880;
         })
-        /* return usersInactive; */
-        const result = await userModel.deleteMany({_id: {$in: usersInactive.map(user => user._id)}});
+        // Recorre el array de usuarios inactivos
+        for (const user of usersInactive) {
+            const mailOptions = {
+            from: envConfig.gmailUser,
+            to: user.email,
+            subject: `Hola ${user.first_name}, tu cuenta ha sido eliminada`,
+            text: `Su cuenta ha sido eliminada por inactividad. Por politicas de la empresa si la cuenta esta más de 48 hs sin movimientos se elimina de forma automatica.
+            
+            Esperamos verte pronto.
+            Saludos`,
+            };
+            transporter.sendMail(mailOptions,(error, info)=>{
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.messageId);
+                }
+            });
+        };
+        const result =  await userModel.deleteMany({_id: {$in: usersInactive.map(user => user._id)}});
         if (result){
             return result;
         }
         else{
             return null
         }
-    }
+    };
 
+    uploadAvatar = async (email, path) => {
+        let userUpdate = await userModel.updateOne({email: email}, {img_profile: path})
+        if (userUpdate){
+            return userUpdate;
+        }
+        else{
+            return null
+        }
+    };
 }

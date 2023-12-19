@@ -1,4 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
+import {logAuthenticate} from '../../controllers/user.controller.js'
 
 const userViewRouter = Router();
 
@@ -10,11 +12,7 @@ userViewRouter.get("/register", (req, res) => {
     res.render('register')
 });
 
-userViewRouter.get("/", (req, res) => {
-    res.render("profile", {
-        user: req.session.user
-    });
-});
+userViewRouter.get("/", passport.authenticate('jwt', { session: true}), logAuthenticate);
 
 
 export default userViewRouter;

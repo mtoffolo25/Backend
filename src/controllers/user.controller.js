@@ -12,8 +12,8 @@ export  const  registerController = async (req, res) => {
     };
     const result = await userService.save(user, res);
     if (result) {
-        req.logger.info("Usuario creado con exito")
-        return res.send({ status: "200", message: "Usuario creado con exito con ID: " + result.id});
+        req.logger.info("Usuario logueado con exito")
+        return res.send({ status: "200", message: "Usuario creado con exito con ID: " + result.id, payload: result});
     }else{
         req.logger.error("Se intenta crear un usuario con email ya registrado en DB")
         return res.status(401).send({ message: "Email ya registrado en la DB" });
@@ -27,8 +27,8 @@ export const getAllUsersController = async (req, res) => {
 };
 
 //Controller para obtener todos los usuarios inactivos
-export const getAllInactiveUsersController = async (req, res) => {
-    const data = await userService.getAllInactive();
+export const delAllInactiveUsersController = async (req, res) => {
+    const data = await userService.deleteAllInactive();
     res.send(data);
 }
 
@@ -67,6 +67,8 @@ export const deleteUserController = async (req, res) => {
     }
 }
 
+
+//controller para actualizar un usuario
 export const updateUserController = async (req, res) => {
     const uid = req.params.uid;
     try {
@@ -98,17 +100,34 @@ export const updateUserController = async (req, res) => {
 
 //controler login
 export const loginController = async (req, res) => {
-        const { email, password } = req.body;
-        const user = await userService.login(email, password, res);
-        if (user) {
-            req.logger.info("Usuario logueado con exito")
-            return res.status(200).send({ message: "Usuario valido" }); 
-        }else{
-            req.logger.error("Usuario no valido, Username o Password incorrecto")
-            return res.status(401).send({ message: "Usuario no valido" });
-        }
+        try {
+            const { email, password } = req.body;
+            const user = await userService.login(email, password, res);
+            if (user) {
+                req.logger.info("Usuario logueado con exito")
+                return res.status(200).send({ message: "Usuario valido" }); 
+            }else{
+                req.logger.error("Usuario no valido, Username o Password incorrecto")
+                return res.status(401).send({ message: "Usuario no valido" });
+            }
+        } catch (error) { 
+            res.status(500).json({ error: 'Error interno del servidor', details: error.message });
+        }   
         
 };
+
+//controller subir img de perfil
+export const imgProfileController = async (req, res) => {
+    let email = req.params.user;
+    let path = "../profile/"+(req.file.filename)
+    
+    const user = await userService.uploadAvatar(email, path);
+    if (user) {
+        req.logger.info("Imagen de perfil subida con exito")
+        return res.status(200).send({ message: "Imagen de perfil subida con exito" }); 
+    }
+    req.logger.error("Error al subir la imagen de perfil")
+}
 
 export const logAuthenticate = async (req, res) => {
     let page = parseInt(req.query.page);

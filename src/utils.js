@@ -1,39 +1,52 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import multer from 'multer';
-import envCongif from './config/env.config.js'
+import envConfig from './config/env.config.js'
 import { faker } from '@faker-js/faker';
+import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer';
+import multer from 'multer'
 
+
+// Encriptacion
+export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
+
+//administracion archivos locales
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export const __dirname = dirname(__filename);
 
-export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-
-export const isValidPassword = (user, password) => {
-    console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
-    return bcrypt.compareSync(password, user.password)
-}
 
 //Configuracion de Multer para subir archivos
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, `${__dirname}/public/img`)},
+function createMulterMiddleware(destination) {
+    return multer({
+      storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, destination);
+        },
+        filename: function (req, file, cb) {
+          cb(null, (file.originalname).split(" ").join("_"));
+        },
+      }),
+      onError: function (err, next) {
+        console.log(err);
+        next();
+      },
+    });
+  }
 
-        filename: function(req, file, cb) {
-            cb(null, file.originalname)
-        }
-    });    
-export const uploader = multer({storage, onError: function(err, next) {
-    console.log(err);
-    next();
-    }
-});
+export const upProfileImg = createMulterMiddleware(`${__dirname}/public/profile`);
+export const upProdImg = createMulterMiddleware(`${__dirname}/public/products`);
+export const upUserDocs = createMulterMiddleware(`${__dirname}/public/documents`);
 
-export const PRIVATE_KEY = envCongif.jwtPrivateKey;
+
+//Config JWT
+
+export const PRIVATE_KEY = envConfig.jwtPrivateKey;
 
 export const generateToken = (user) => {
-    return jwt.sign({user}, PRIVATE_KEY, {expiresIn: '60s'})
+    const token = jwt.sign({user}, PRIVATE_KEY, {expiresIn: '24h'})
+    return token;
 };
 
 export const authToken = (req, res, next) => {
@@ -42,27 +55,38 @@ export const authToken = (req, res, next) => {
     if (!authHeader){ 
         return res.status(401).send({error: 'User not authenticated or missing token'})
     };
-    const token = authHeader.split(' ')[1]; 
+    const token = authHeader.split(' ')[1]; // se hace el split para retirar la palabra Bearer y quedarnos solo con el token
     
     //validar token
     jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
         if (error) return res.status(403).send({error: 'Invalid token, access denied'});
+        //token ok
         req.user = credentials.user;
         next();
     });
 };
 
-faker.locale = 'es'; //Idioma de los datos
 
-export const generateProduct = () => {
-    return {
+//creamos base de productos con Faker
+export const generateProducts = () => {
+    return{
+        _id: faker.database.mongodbObjectId(),
         title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        code: faker.string.alpha(5),
         price: faker.commerce.price(),
-        stock: faker.random.numeric(1),
-        id: faker.database.mongodbObjectId(),
-        image: faker.image.image()
+        thumbnail: faker.image.avatar(),
+        stock: faker.number.int(500),
+        available: faker.datatype.boolean(),
     }
 };
 
-
-export default __dirname;
+//transporter de Nodemailer
+export const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    auth: {
+        user: envConfig.gmailUser, 
+        pass: envConfig.gmailPass
+    }
+})

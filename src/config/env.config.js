@@ -12,11 +12,15 @@ program
     program.parse();
 
 const enviroment = program.opts().mode
+
 console.log("Modo Opt: ", program.opts().mode);
+console.log("Persistencia Opt: ", program.opts().persist);
 
 dotenv.config({
     path: enviroment === "prod" ? "./src/config/.env.production" : "./src/config/.env.development"
 });
+
+
 
 export default {
     enviroment: enviroment,
@@ -27,4 +31,6 @@ export default {
     gitHubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     gitHubCallbackUrl: process.env.GITHUB_CALLBACK_URL,
     jwtPrivateKey: process.env.JWT_PRIVATE_KEY,
+    gmailUser: process.env.GMAIL_USER,
+    gmailPass: process.env.GMAIL_PASS,
 };
