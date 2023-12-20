@@ -24,7 +24,7 @@ const cartSchema = new mongoose.Schema({
 
 
 cartSchema.pre('findOne',function () {
-    this.populate('products.product.productId')
+    this.populate('products.product')
 })
 
 cartSchema.plugin(mongoosePaginate)

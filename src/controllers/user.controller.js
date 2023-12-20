@@ -100,20 +100,21 @@ export const updateUserController = async (req, res) => {
 
 //controler login
 export const loginController = async (req, res) => {
-        try {
-            const { email, password } = req.body;
-            const user = await userService.login(email, password, res);
-            if (user) {
-                req.logger.info("Usuario logueado con exito")
-                return res.status(200).send({ message: "Usuario valido" }); 
-            }else{
-                req.logger.error("Usuario no valido, Username o Password incorrecto")
-                return res.status(401).send({ message: "Usuario no valido" });
-            }
-        } catch (error) { 
-            res.status(500).json({ error: 'Error interno del servidor', details: error.message });
-        }   
-        
+    try {
+        const { email, password } = req.body;
+        const user = await userService.login(email, password, res);
+
+        if (user) {
+            req.logger.info("Usuario logueado con éxito");
+            res.status(200).json({ message: "Inicio de sesión exitoso" });
+        } else {
+            req.logger.error("Usuario no válido, Usuario o contraseña incorrectos");
+            res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+        }
+    } catch (error) {
+        req.logger.error("Error interno del servidor:", error);
+        res.status(500).json({ error: 'Error interno del servidor', details: error.message });
+    }
 };
 
 //controller subir img de perfil

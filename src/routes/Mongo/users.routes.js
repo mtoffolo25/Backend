@@ -14,7 +14,7 @@ router.post("/register", registerController );
 //Actualizamos un usuario en la base de datos MongoDB
 router.put('/update/:uid', updateUserController)
 
-//Actualizamos un usuario en la base de datos MongoDB
+//Buscamos un usuario en la base de datos MongoDB
 router.get('/findOne/:uid', findOneUserController)
 
 //Eliminar un usuario de la base de datos MongoDB

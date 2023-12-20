@@ -11,13 +11,13 @@ export default class CartServices {
     };
 
     //services get cart by id
-    getCartById = async (id)=> {
-        const cart = await cartModel.findOne(id).populate('products.product');
+    getCartById = async (id) => {
+        const cart = await cartModel.findById(id).populate('products.product');
         if (cart) {
-            return cart; 
+            return cart;
         } else {
             return null;
-            }
+        }
     };
 
     //services add product to cart

@@ -23,31 +23,31 @@ export default class UserService {
         return usersDto;
     };
 
-    save = async (data) => {    
+    save = async (data) => {
         try {
-            const exists = await userModel.findOne({ email:data.email });
+            const exists = await userModel.findOne({ email: data.email });
             if (exists) {
                 return null;
             };
-            data.password = createHash(data.password); 
+            data.password = createHash(data.password);
             let user = await userModel.create(data);
             const userId = user._id.toString();
-            const  body  = {
+            const body = {
                 userId,
                 products: [],
             }
             let cart = await cartServices.createCart(body);
 
             if (cart && user) {
-                user.carts.push({ "cart": cart._id});
+                user.carts.push({ "cart": cart._id });
                 await user.save();
                 return user;
-            
+
             } else {
                 return null;
             }
         } catch (error) {
-            throw new Error("Error en la creación del usuario: " + error.message);       
+            throw new Error("Error en la creación del usuario: " + error.message);
         }
     };
 
@@ -81,13 +81,15 @@ export default class UserService {
             throw new Error("Error al validar usuario" + error.message);
         }
     };
+    
 
+    
 
     logout = async (cookieName, res) => {
         res.clearCookie(cookieName);
         return res.send({ message: 'Logout exitoso' });
     };
-    
+
     gitHubLogin = async (user, res) => {
         let cartData = await cartServices.getCartById(user.carts[0].cart._id)
         const tokenUser = {
@@ -99,49 +101,49 @@ export default class UserService {
         };
         const accessToken = generateToken(tokenUser)
         res.cookie('jwtCookieToken', accessToken, {
-            maxAge: 60000,  
+            maxAge: 60000,
             httpOnly: true,
         })
-    
+
         res.redirect('/users');
     };
 
-    loginShowProducts = async (page, req ,res) => {
-        let result = await productModel.paginate({}, {page, lean: true });
-            let prevLink = result.hasPrevPage ? `http://localhost:${PORT}/users?page=${result.prevPage}` : '';
-            let nextLink = result.hasNextPage ? `http://localhost:${PORT}/users?page=${result.nextPage}` : '';
-            let isValid = !(result.page <= 0 || result.page > result.totalPages)
-    
-            return res.render('profile', {user: req.user,  result, prevLink, nextLink, isValid })            
+    loginShowProducts = async (page, req, res) => {
+        let result = await productModel.paginate({}, { page, lean: true });
+        let prevLink = result.hasPrevPage ? `http://localhost:${PORT}/users?page=${result.prevPage}` : '';
+        let nextLink = result.hasNextPage ? `http://localhost:${PORT}/users?page=${result.nextPage}` : '';
+        let isValid = !(result.page <= 0 || result.page > result.totalPages)
+
+        return res.render('profile', { user: req.user, result, prevLink, nextLink, isValid })
     };
 
     loginAdmin = async (req, res) => {
         let isAdmin = true
-        return res.render('profile', {user: req.user, isAdmin})            
+        return res.render('profile', { user: req.user, isAdmin })
     };
 
     updateUser = async (id, user) => {
         let result = await userModel.updateOne(id, user);
-        if (result){
+        if (result) {
             return result;
         }
-        else{
+        else {
             return null
         }
     };
 
     findById = async (id) => {
-        let result = await userModel.findOne(id );
-        let userDto = new UserUpdt (result);
+        let result = await userModel.findOne(id);
+        let userDto = new UserUpdt(result);
         return userDto;
     };
 
     deleteUser = async (id) => {
         let result = await userModel.deleteOne(id);
-        if (result){
+        if (result) {
             return result;
         }
-        else{
+        else {
             return null
         }
     };
@@ -158,15 +160,15 @@ export default class UserService {
         // Recorre el array de usuarios inactivos
         for (const user of usersInactive) {
             const mailOptions = {
-            from: envConfig.gmailUser,
-            to: user.email,
-            subject: `Hola ${user.first_name}, tu cuenta ha sido eliminada`,
-            text: `Su cuenta ha sido eliminada por inactividad. Por politicas de la empresa si la cuenta esta más de 48 hs sin movimientos se elimina de forma automatica.
+                from: envConfig.gmailUser,
+                to: user.email,
+                subject: `Hola ${user.first_name}, tu cuenta ha sido eliminada`,
+                text: `Su cuenta ha sido eliminada por inactividad. Por politicas de la empresa si la cuenta esta más de 48 hs sin movimientos se elimina de forma automatica.
             
             Esperamos verte pronto.
             Saludos`,
             };
-            transporter.sendMail(mailOptions,(error, info)=>{
+            transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.log(error);
                 } else {
@@ -174,21 +176,21 @@ export default class UserService {
                 }
             });
         };
-        const result =  await userModel.deleteMany({_id: {$in: usersInactive.map(user => user._id)}});
-        if (result){
+        const result = await userModel.deleteMany({ _id: { $in: usersInactive.map(user => user._id) } });
+        if (result) {
             return result;
         }
-        else{
+        else {
             return null
         }
     };
 
     uploadAvatar = async (email, path) => {
-        let userUpdate = await userModel.updateOne({email: email}, {img_profile: path})
-        if (userUpdate){
+        let userUpdate = await userModel.updateOne({ email: email }, { img_profile: path })
+        if (userUpdate) {
             return userUpdate;
         }
-        else{
+        else {
             return null
         }
     };
